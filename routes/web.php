@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Http\Controllers\BetController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RouletteController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,10 +22,29 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+Route::prefix('profile')
+    ->name('profile.')
+    ->middleware(['auth'])
+    ->group(function () {
+        Route::controller(ProfileController::class)->group(function () {
+            Route::get('/', 'edit')->name('edit');
+            Route::patch('/', 'update')->name('update');
+            Route::delete('/', 'destroy')->name('destroy');
+        });
+    });
 
-require __DIR__.'/auth.php';
+Route::prefix('roulette')
+    ->name('roulette.')
+    ->middleware(['auth', 'verified'])
+    ->group(function () {
+        Route::get('/', [RouletteController::class, 'index'])->name('index');
+    });
+
+Route::prefix('bet')
+    ->name('bet.')
+    ->middleware(['auth', 'verified'])
+    ->group(function () {
+        Route::post('/', [BetController::class, 'store'])->name('store');
+    });
+
+require __DIR__ . '/auth.php';

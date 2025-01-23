@@ -37,6 +37,12 @@ const showingNavigationDropdown = ref(false);
                 >
                   Dashboard
                 </NavLink>
+                <NavLink
+                  :href="route('roulette.index')"
+                  :active="route().current('roulette.index')"
+                >
+                  Roulette
+                </NavLink>
               </div>
             </div>
 
