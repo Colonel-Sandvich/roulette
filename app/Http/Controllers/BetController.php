@@ -20,7 +20,7 @@ class BetController extends Controller
         } catch (InsufficientBalanceForBet $exception) {
             return to_route('roulette.index')
                 ->withErrors(
-                    ['balance' => "Tried to place a bet of {$exception->amount} with a balance of only {$exception->balance}"],
+                    ['balance' => $exception->getMessage()],
                 );
         }
 

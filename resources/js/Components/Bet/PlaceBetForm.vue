@@ -21,6 +21,8 @@ function submit() {
   form.submit("post", route("bet.store"), {
     preserveScroll: true,
   });
+
+  setTimeout(() => form.clearErrors(), 10000);
 }
 
 const disabled = computed(() => betsClosed || form.processing);
