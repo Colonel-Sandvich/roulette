@@ -1,11 +1,8 @@
 #!/bin/bash
-# Make sure this file has executable permissions, run `chmod +x build-app.sh`
+# Make sure this file has executable permissions, run `chmod +x pre-deploy.sh`
 
 # Exit the script if any command fails
 set -e
-
-# Build assets using bun
-bun run build
 
 echo "$DB_DATABASE";
 
@@ -22,6 +19,8 @@ else
     echo "Database file already exists at: $DB_DATABASE"
 fi
 
+# Run pending migrations
+php artisan migrate
 
 # Cache the various components of the Laravel application
 php artisan optimize
