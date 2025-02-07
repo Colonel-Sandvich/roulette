@@ -7,11 +7,19 @@ set -e
 # Build assets using bun
 bun run build
 
+echo "$DB_DATABASE";
+
 if [ ! -f "$DB_DATABASE" ]; then
+    echo "Database file does not exist. Creating at: $DB_DATABASE"
+    
     touch "$DB_DATABASE"
     
     # Ensure proper permissions
     chmod 644 "$DB_DATABASE"
+    
+    echo "Database file created successfully."
+else
+    echo "Database file already exists at: $DB_DATABASE"
 fi
 
 
