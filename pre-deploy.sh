@@ -5,6 +5,7 @@
 set -e
 
 echo "$DB_DATABASE";
+echo ls;
 
 if [ ! -f "$DB_DATABASE" ]; then
     echo "Database file does not exist. Creating at: $DB_DATABASE"
