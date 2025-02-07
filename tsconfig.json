@@ -9,6 +9,7 @@
         "target": "ESNext",
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
+        "noUncheckedIndexedAccess": true,
         "noEmit": true,
         "skipLibCheck": true,
         "paths": {

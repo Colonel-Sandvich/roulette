@@ -46,17 +46,17 @@ class ProcessBets implements ShouldQueue
         DB::statement(<<<'SQL'
             UPDATE wallets
             SET balance = balance + winnings.total
-            FROM (SELECT bets.wallet_id, SUM(bets.amount) * ? as total
+            FROM (SELECT bets.wallet_id, SUM(bets.amount) * :payout_ratio as total
                   FROM bets
-                  WHERE bets.position = ?
-                    AND roulette_game_id = ?
+                  WHERE bets.position = :game_result
+                    AND roulette_game_id = :roulette_game_id
                   GROUP BY bets.wallet_id) as winnings
             WHERE wallets.user_id = winnings.wallet_id
         SQL,
             [
-                static::BET_PAYOUT_RATIO,
-                $rouletteGame->result,
-                $rouletteGame->id,
+                'payout_ratio' => static::BET_PAYOUT_RATIO,
+                'game_result' => $rouletteGame->result,
+                'roulette_game_id' => $rouletteGame->id,
             ],
         );
     }

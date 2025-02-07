@@ -10,9 +10,10 @@ if (! function_exists('getUser')) {
      */
     function getUser(): User
     {
-        $user = request()->user();
+        $user = auth()->user();
 
         if (! $user) {
+            // TODO: UserNotFound
             throw new RuntimeException;
         }
 

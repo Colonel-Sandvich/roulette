@@ -42,8 +42,7 @@ const submit = () => {
           class="mt-1 block w-full"
           required
           autofocus
-          autocomplete="username"
-        />
+          autocomplete="username" />
 
         <InputError class="mt-2" :message="form.errors.email" />
       </div>
@@ -57,8 +56,7 @@ const submit = () => {
           type="password"
           class="mt-1 block w-full"
           required
-          autocomplete="new-password"
-        />
+          autocomplete="new-password" />
 
         <InputError class="mt-2" :message="form.errors.password" />
       </div>
@@ -72,17 +70,13 @@ const submit = () => {
           type="password"
           class="mt-1 block w-full"
           required
-          autocomplete="new-password"
-        />
+          autocomplete="new-password" />
 
         <InputError class="mt-2" :message="form.errors.password_confirmation" />
       </div>
 
       <div class="mt-4 flex items-center justify-end">
-        <PrimaryButton
-          :class="{ 'opacity-25': form.processing }"
-          :disabled="form.processing"
-        >
+        <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
           Reset Password
         </PrimaryButton>
       </div>

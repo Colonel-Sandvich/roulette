@@ -14,6 +14,6 @@ class RouletteGameNotFound extends \RuntimeException
     // "[ModelFQN]: Failed to find by: ..."
     public static function current(): self
     {
-        return new self('Failed to find current RouletteGame');
+        return new self("Failed to find current RouletteGame");
     }
 }

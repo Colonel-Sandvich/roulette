@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isRed, numbers } from "@/utils/roulette";
+import { isRed, numbers, spinDownTimeInSeconds, spins } from "@/utils/roulette";
 import { sleep } from "@/utils/sleep";
 import { computed, ref, watch } from "vue";
 
@@ -7,11 +7,7 @@ const { spinTo } = defineProps<{
   spinTo: number | null;
 }>();
 
-const spinToIndex = computed(() =>
-  spinTo !== null ? numbers.indexOf(spinTo) : null,
-);
-
-const spins = 2;
+const spinToIndex = computed(() => (spinTo !== null ? numbers.indexOf(spinTo) : null));
 
 const showBall = ref(false);
 
@@ -38,18 +34,22 @@ watch(
 </script>
 
 <template>
-  <div class="text-white">
-    <div class="plate" id="plate">
-      <ul class="inner" id="inner">
+  <div class="text-white select-none">
+    <div
+      style="animation-duration: 24s"
+      class="plate relative m-3 size-[350px] animate-spin rounded-full">
+      <div
+        class="absolute inset-[12%] z-1 block rounded-full border-stone-300 bg-black/65 inset-ring-3 inset-ring-zinc-500"></div>
+      <ul id="inner" class="relative block size-[350px]">
         <p
           v-if="showBall"
           :data-spinto="spinToIndex"
-          class="ball absolute inset-[22%] z-10 block rounded-full text-6xl leading-normal"
-        >
+          class="ball absolute z-10 block rounded-full text-6xl leading-normal">
           {{ "\u2022" }}
         </p>
         <li
           v-for="(number, i) of numbers"
+          :key="number"
           :style="`transform: rotate(${i * (360 / 37)}deg)`"
           style="left: calc(50% - 16px); border-top-width: 175px"
           class="absolute top-0 box-border inline-block h-4 w-8 origin-bottom border-x-[16px] border-x-transparent"
@@ -59,11 +59,17 @@ watch(
               : isRed(number)
                 ? 'border-t-red-500'
                 : 'border-t-black',
-          ]"
-        >
-          <span class="pit text-center text-xl leading-none">{{ number }}</span>
+          ]">
+          <span
+            class="absolute -top-[175px] -left-[17px] inline-block w-8 scale-y-180 pt-3 text-center text-xl leading-none">
+            {{ number }}
+          </span>
         </li>
+        <div
+          class="absolute inset-[24%] z-3 block rounded-full border-3 border-zinc-500 bg-neutral-600"></div>
       </ul>
+      <div
+        class="absolute -inset-1.5 block rounded-full border-6 border-[gold] inset-ring-2 ring-2 ring-yellow-200 inset-ring-black"></div>
     </div>
   </div>
 </template>
@@ -75,86 +81,23 @@ watch(
   inherits: false;
   initial-value: -1000turn;
 }
+/* -1000turn / 1000s = -1turn/s constant rotation */
 .ball {
   rotate: calc(mod(var(--a), 1turn));
   transition: --a 1000s linear;
+  inset: 17%;
   @starting-style {
     --a: 0turn;
   }
 }
 .ball[data-spinto] {
   --a: 0deg;
-  transition: --a 0.8s;
-  rotate: calc(
-    -1turn * v-bind(spins) + v-bind(spinToIndex) * 1turn / 37 + 60deg
-  );
+  rotate: calc(-1turn * v-bind(spins) + v-bind(spinToIndex) * 1turn / 37 + 59deg);
+  inset: 22%;
   /* ~<spins> turns before stopping.
-   Don't know why but we have to add an extra 60deg  */
-  transition: rotate 4s ease-out;
-}
-
-@keyframes spin {
-  to {
-    rotate: 1turn;
-  }
-}
-
-.plate {
-  background-color: gray;
-  width: 350px;
-  height: 350px;
-  margin: 12px;
-  border-radius: 50%;
-  position: relative;
-  animation: spin 24s infinite linear;
-}
-
-.plate:after,
-.plate:before {
-  content: "";
-  display: block;
-  position: absolute;
-  border-radius: 50%;
-}
-.plate:after {
-  inset: -6px;
-  border: 6px solid gold;
-  box-shadow:
-    inset 0px 0px 0px 2px #b39700,
-    0px 0px 0px 2px #ffeb80;
-}
-.plate:before {
-  background: rgba(0, 0, 0, 0.65);
-  border: 1px solid silver;
-  box-shadow: inset 0px 0px 0px 2px #808080;
-  inset: 12%;
-  z-index: 1;
-}
-.pit {
-  color: #fff;
-  padding-top: 12px;
-  width: 32px;
-  display: inline-block;
-  transform: scale(1, 1.8);
-  position: absolute;
-  top: -175px;
-  left: -17px;
-}
-.inner {
-  display: block;
-  height: 350px;
-  width: 350px;
-  position: relative;
-}
-
-.inner:after {
-  content: "";
-  display: block;
-  position: absolute;
-  border-radius: 50%;
-  z-index: 3;
-  inset: 24%;
-  background-color: #4d4d4d;
-  border: 3px solid #808080;
+   Don't know why but we have to add an extra 59deg  */
+  transition:
+    rotate calc(v-bind(spinDownTimeInSeconds) * 1s) ease-out,
+    inset 2s ease-out;
 }
 </style>

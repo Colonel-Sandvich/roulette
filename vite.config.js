@@ -25,4 +25,5 @@ export default defineConfig({
     }),
     tailwindcss()
   ],
+  envPrefix: ["VITE_", "ROULETTE_"]
 });

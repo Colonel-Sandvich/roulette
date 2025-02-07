@@ -1,22 +1,44 @@
 import js from "@eslint/js";
 import skipFormattingConfig from "@vue/eslint-config-prettier/skip-formatting";
-import {
-  defineConfig,
-  createConfig as vueTsEslintConfig,
-} from "@vue/eslint-config-typescript";
+import { defineConfigWithVueTs, vueTsConfigs } from "@vue/eslint-config-typescript";
 import pluginVue from "eslint-plugin-vue";
 
-export default defineConfig(
-  js.configs.recommended,
-  ...pluginVue.configs["flat/recommended"],
+export default defineConfigWithVueTs(
   skipFormattingConfig,
-  vueTsEslintConfig(),
+  js.configs.recommended,
+  pluginVue.configs["flat/recommended"],
+  vueTsConfigs.recommendedTypeChecked,
   {
     files: ["resources/js/**/*.{vue,ts,js}"],
     ignores: ["resources/js/types/global.d.ts"],
     rules: {
       "vue/multi-word-component-names": "off",
       "no-undef": "off",
+      "vue/max-attributes-per-line": [
+        "warn",
+        {
+          singleline: {
+            // Prettier will chop down attributes if line too long
+            max: 1000,
+          },
+          multiline: {
+            max: 1,
+          },
+        },
+      ],
+      "vue/singleline-html-element-content-newline": "off",
+      "vue/html-closing-bracket-newline": "off",
+      "vue/html-self-closing": [
+        "warn",
+        {
+          html: {
+            void: "always",
+            normal: "never",
+            component: "any",
+          },
+        },
+      ],
+      "vue/attribute-hyphenation": "off",
     },
     linterOptions: {
       // noInlineConfig: true,
@@ -24,6 +46,6 @@ export default defineConfig(
     },
   },
   {
-    ignores: ["vendor/", "public/", "bootstrap/"],
+    ignores: ["vendor/", "public/", "bootstrap/", "resources/js/ziggy.js"],
   },
 );

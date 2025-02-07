@@ -6,33 +6,41 @@ namespace App\Http\Controllers;
 
 use App\Models\Bet;
 use App\Models\RouletteGame;
-use App\Wallet\GetUserWallet;
+use App\Roulette\GetCurrentRouletteGame;
+use Illuminate\Database\Eloquent\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class RouletteController extends Controller
 {
-    public function index(GetUserWallet $getUserWallet): Response
+    public function __construct(
+        public GetCurrentRouletteGame $getCurrentRouletteGame,
+    ) {}
+
+    public function index(): Response
     {
         $rouletteGames = RouletteGame::query()
+            ->whereNotNull('result')
             ->latest()
-            ->limit(20)
-            // TODO: 20 as config
-            ->get();
-
-        [$currentGame, $lastGame] = $rouletteGames->shift(2);
-
-        $wallet = $getUserWallet(getUser()->id);
-        $bets = Bet::query()
-            ->whereWalletId($wallet->getKey())
-            ->whereRouletteGameId($currentGame->id)
+            // +1 because we hide last game while ball spins,
+            // this prevents layout shift
+            ->limit(config('roulette.previous_games_display_count') + 1)
             ->get();
 
         return Inertia::render('Roulette', [
-            'currentGame' => $currentGame,
-            'lastGame' => $lastGame,
-            'bets' => $bets,
-            'games' => $rouletteGames,
+            'previousGames' => $rouletteGames,
+            'bets' => fn () => $this->loadBets(),
         ]);
+    }
+
+    /** @return Collection<int, Bet> */
+    public function loadBets(): Collection
+    {
+        $currentGame = ($this->getCurrentRouletteGame)();
+
+        return Bet::query()
+            ->whereWalletId(getUser()->walletId())
+            ->whereRouletteGameId($currentGame->id)
+            ->get();
     }
 }

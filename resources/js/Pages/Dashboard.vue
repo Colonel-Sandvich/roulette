@@ -1,30 +1,32 @@
 <script setup lang="ts">
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import Layout from "@/Layouts/Layout.vue";
+import { Head, Link, router } from "@inertiajs/vue3";
+
+function addToBalance() {
+  router.post(route("wallet.update_balance"));
+}
 </script>
 
 <template>
   <Head title="Dashboard" />
 
-  <AuthenticatedLayout>
+  <Layout>
     <template #header>
-      <h2
-        class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
-      >
-        Dashboard
-      </h2>
+      <h2 class="text-xl leading-tight font-semibold text-gray-800">Dashboard - Wallet</h2>
     </template>
 
-    <div class="py-12">
-      <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div
-          class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800"
-        >
-          <div class="p-6 text-gray-900 dark:text-gray-100">
-            You're logged in!
-          </div>
-        </div>
+    <div class="flex flex-col gap-40 p-6 text-gray-900">
+      <div class="flex justify-center gap-8 px-10 py-6">
+        <p class="flex items-center">Balance: {{ $page.props.auth.user.wallet.balance }}</p>
+        <PrimaryButton @click="addToBalance">Add 1000 to my balance</PrimaryButton>
       </div>
+      <Link :href="route('roulette.index')" class="flex justify-center">
+        <div
+          class="inline-flex cursor-pointer items-center rounded-lg bg-green-700 px-8 py-6 text-lg font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out focus:bg-green-400">
+          Head to the table
+        </div>
+      </Link>
     </div>
-  </AuthenticatedLayout>
+  </Layout>
 </template>

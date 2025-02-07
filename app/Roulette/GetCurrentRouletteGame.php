@@ -12,9 +12,7 @@ class GetCurrentRouletteGame
     public function __invoke(): RouletteGame
     {
         $game = RouletteGame::query()
-            ->whereOpen(true)
             ->whereResult(null)
-            ->latest()
             ->first();
 
         if (! $game) {

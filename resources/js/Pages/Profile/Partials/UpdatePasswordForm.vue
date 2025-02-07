@@ -38,11 +38,9 @@ const updatePassword = () => {
 <template>
   <section>
     <header>
-      <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-        Update Password
-      </h2>
+      <h2 class="text-lg font-medium text-gray-900">Update Password</h2>
 
-      <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+      <p class="mt-1 text-sm text-gray-600">
         Ensure your account is using a long, random password to stay secure.
       </p>
     </header>
@@ -57,8 +55,7 @@ const updatePassword = () => {
           v-model="form.current_password"
           type="password"
           class="mt-1 block w-full"
-          autocomplete="current-password"
-        />
+          autocomplete="current-password" />
 
         <InputError :message="form.errors.current_password" class="mt-2" />
       </div>
@@ -72,8 +69,7 @@ const updatePassword = () => {
           v-model="form.password"
           type="password"
           class="mt-1 block w-full"
-          autocomplete="new-password"
-        />
+          autocomplete="new-password" />
 
         <InputError :message="form.errors.password" class="mt-2" />
       </div>
@@ -86,8 +82,7 @@ const updatePassword = () => {
           v-model="form.password_confirmation"
           type="password"
           class="mt-1 block w-full"
-          autocomplete="new-password"
-        />
+          autocomplete="new-password" />
 
         <InputError :message="form.errors.password_confirmation" class="mt-2" />
       </div>
@@ -99,14 +94,8 @@ const updatePassword = () => {
           enter-active-class="transition ease-in-out"
           enter-from-class="opacity-0"
           leave-active-class="transition ease-in-out"
-          leave-to-class="opacity-0"
-        >
-          <p
-            v-if="form.recentlySuccessful"
-            class="text-sm text-gray-600 dark:text-gray-400"
-          >
-            Saved.
-          </p>
+          leave-to-class="opacity-0">
+          <p v-if="form.recentlySuccessful" class="text-sm text-gray-600">Saved.</p>
         </Transition>
       </div>
     </form>

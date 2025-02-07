@@ -7,13 +7,13 @@ namespace App\Bet;
 use App\Models\Bet;
 use App\Roulette\Exceptions\InsufficientBalanceForBet;
 use App\Roulette\GetCurrentRouletteGame;
-use App\Wallet\GetUserWallet;
+use App\Wallet\GetCurrentUserWallet;
 use Illuminate\Support\Facades\DB;
 
 class PlaceBetService
 {
     public function __construct(
-        protected GetUserWallet $getWallet,
+        protected GetCurrentUserWallet $getWallet,
         protected GetCurrentRouletteGame $getCurrentRouletteGame,
     ) {}
 
@@ -23,9 +23,9 @@ class PlaceBetService
      *
      * @see /database/migrations/2025_01_12_125204_create_wallets_table.php
      */
-    public function __invoke(int $userId, BetData $betData): Bet
+    public function __invoke(BetData $betData): Bet
     {
-        $wallet = ($this->getWallet)($userId);
+        $wallet = ($this->getWallet)();
 
         if ($wallet->balance < $betData->amount) {
             throw (new InsufficientBalanceForBet($wallet->balance, $betData->amount));

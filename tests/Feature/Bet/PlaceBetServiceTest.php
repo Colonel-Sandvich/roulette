@@ -12,6 +12,7 @@ use App\Roulette\Exceptions\InsufficientBalanceForBet;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
+    $this->actingAs($this->user);
 
     $this->roulette = RouletteGame::factory()
         ->open()
@@ -26,10 +27,7 @@ test('bet is placed and wallet is updated', function () {
         ->balance($amount = 10)
         ->create();
 
-    ($this->placeBetService)(
-        $this->user->id,
-        new BetData($amount, $position = 0),
-    );
+    ($this->placeBetService)(new BetData($amount, $position = 0));
 
     $this->assertDatabaseHas(Bet::class, [
         'amount' => $amount,
@@ -50,7 +48,9 @@ test('fails to place bet when not enough balance in wallet', function () {
 
     $amount = 1;
     $this->assertTrue($amount > $balance);
-    $this->expectExceptionObject(new InsufficientBalanceForBet($balance, $amount));
+    $this->expectExceptionObject(
+        new InsufficientBalanceForBet($balance, $amount),
+    );
 
-    ($this->placeBetService)($this->user->id, new BetData($amount, 0));
+    ($this->placeBetService)(new BetData($amount, 0));
 });

@@ -5,11 +5,14 @@ export interface User {
   name: string;
   email: string;
   email_verified_at?: string;
+  wallet: Wallet;
 }
 
-export type PageProps<
-  T extends Record<string, unknown> = Record<string, unknown>,
-> = T & {
+export interface Wallet {
+  balance: number;
+}
+
+export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
   auth: {
     user: User;
   };

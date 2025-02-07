@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\BetController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RouletteController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,12 +26,11 @@ Route::get('/dashboard', function () {
 Route::prefix('profile')
     ->name('profile.')
     ->middleware(['auth'])
+    ->controller(ProfileController::class)
     ->group(function () {
-        Route::controller(ProfileController::class)->group(function () {
-            Route::get('/', 'edit')->name('edit');
-            Route::patch('/', 'update')->name('update');
-            Route::delete('/', 'destroy')->name('destroy');
-        });
+        Route::get('/', 'edit')->name('edit');
+        Route::patch('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('destroy');
     });
 
 Route::prefix('roulette')
@@ -45,6 +45,15 @@ Route::prefix('bet')
     ->middleware(['auth', 'verified'])
     ->group(function () {
         Route::post('/', [BetController::class, 'store'])->name('store');
+    });
+
+Route::prefix('wallet')
+    ->name('wallet.')
+    ->middleware(['auth', 'verified'])
+    ->group(function () {
+        Route::post('/', [WalletController::class, 'update'])->name(
+            'update_balance',
+        );
     });
 
 require __DIR__ . '/auth.php';

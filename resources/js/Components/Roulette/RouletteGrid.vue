@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { index, isRed } from "@/utils/roulette";
+import { index } from "@/utils/roulette";
+import Tile from "./Tile.vue";
 
 const selected = defineModel<number | null>();
 
@@ -11,31 +12,26 @@ function select(num: number) {
 
   selected.value = num;
 }
+
+const reorderedNumbers = Array.from({ length: 36 }, (_, i) => index(i + 1));
 </script>
 
 <template>
-  <div class="w-[30rem] bg-green-600 p-4 text-white outline-white">
-    <div
-      class="grid w-[28rem] cursor-pointer select-none grid-flow-row grid-cols-13 grid-rows-3"
-    >
+  <div class="rounded-xl bg-green-700 p-4 text-white outline-white">
+    <div class="grid cursor-pointer grid-flow-row grid-cols-13 grid-rows-3 select-none">
       <div
         class="row-span-3 flex w-9 items-center justify-center border-2"
-        @click="select(0)"
-        :class="0 === selected ? '!bg-white text-black' : ''"
-      >
+        :class="0 === selected ? 'bg-white text-black' : 'bg-green-500'"
+        @click="select(0)">
         <div>0</div>
       </div>
-      <div
-        v-for="i of 36"
-        @click="select(index(i))"
-        class="flex size-9 items-center justify-center border-2 text-center"
-        :class="[
-          isRed(index(i)) ? 'bg-red-500' : 'bg-black',
-          index(i) === selected ? '!bg-white text-black' : '',
-        ]"
-      >
-        {{ index(i) }}
-      </div>
+      <Tile
+        v-for="number of reorderedNumbers"
+        :key="number"
+        v-memo="[number === selected]"
+        :class="{ 'z-10 bg-white! text-black!': number === selected }"
+        :number
+        @click="select(number)" />
     </div>
   </div>
 </template>

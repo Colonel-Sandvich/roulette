@@ -16,11 +16,7 @@ class RouletteGameFactory extends Factory
     public function definition(): array
     {
         return [
-            'open' => $this->faker->boolean(),
-            'result' => $this->faker->numberBetween(
-                BetData::MIN_POSITION,
-                BetData::MAX_POSITION,
-            ),
+            'result' => $this->makeRandomBettingPosition(),
             'created_at' => now(),
             'updated_at' => now(),
         ];
@@ -28,19 +24,19 @@ class RouletteGameFactory extends Factory
 
     public function open(): self
     {
-        return $this->state(['open' => true, 'result' => null]);
+        return $this->state(['result' => null]);
     }
 
     public function closed(): self
     {
-        return $this->state(
-            [
-                'open' => false,
-                'result' => $this->faker->numberBetween(
-                    BetData::MIN_POSITION,
-                    BetData::MAX_POSITION,
-                ),
-            ],
+        return $this->set('result', $this->makeRandomBettingPosition());
+    }
+
+    protected function makeRandomBettingPosition(): int
+    {
+        return $this->faker->numberBetween(
+            BetData::MIN_POSITION,
+            BetData::MAX_POSITION,
         );
     }
 }

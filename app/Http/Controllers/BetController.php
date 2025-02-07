@@ -11,15 +11,12 @@ use Illuminate\Http\RedirectResponse;
 
 class BetController extends Controller
 {
-    /**
-     * @throws \Throwable
-     */
     public function store(
         BetData $betData,
         PlaceBetService $placeBetService,
     ): RedirectResponse {
         try {
-            $placeBetService(getUser()->id, $betData);
+            $placeBetService($betData);
         } catch (InsufficientBalanceForBet $exception) {
             return to_route('roulette.index')
                 ->withErrors(

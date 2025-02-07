@@ -20,13 +20,5 @@ class RouletteGame extends Model
 
     protected $attributes = [
         'result' => null,
-        'open' => true,
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'open' => 'boolean',
-        ];
-    }
 }

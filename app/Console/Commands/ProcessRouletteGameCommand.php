@@ -7,6 +7,8 @@ namespace App\Console\Commands;
 use App\Bet\BetData;
 use App\Jobs\ProcessBets;
 use App\Models\RouletteGame;
+use App\Roulette\Exceptions\MultipleOpenRouletteGames;
+use App\Roulette\GetCurrentRouletteGame;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -14,24 +16,13 @@ class ProcessRouletteGameCommand extends Command
 {
     protected $signature = 'roulette-game:process';
 
-    protected $description = 'Command description';
+    protected $description = 'Close the current roulette game with a result and create a new one, dispatching a job to process bets as well';
 
-    public function handle(): void
+    public function handle(GetCurrentRouletteGame $getCurrentRouletteGame): void
     {
-        $currentGame = RouletteGame::query()
-            ->whereOpen(true)
-            ->whereResult(null)
-            // TODO: 60 as config
-            ->where('created_at', '<', now()->subSeconds(60))
-            ->latest()
-            ->first();
-        if (! $currentGame) {
-            $this->ensureOpenRouletteGame();
+        $this->ensureOneOpenRouletteGame();
 
-            return;
-        }
-
-        $currentGame->open = false;
+        $currentGame = $getCurrentRouletteGame();
 
         $result = random_int(BetData::MIN_POSITION, BetData::MAX_POSITION);
         $currentGame->result = $result;
@@ -45,14 +36,19 @@ class ProcessRouletteGameCommand extends Command
         dispatch(new ProcessBets($currentGame->id));
     }
 
-    protected function ensureOpenRouletteGame(): void
+    /** @throws MultipleOpenRouletteGames */
+    protected function ensureOneOpenRouletteGame(): void
     {
         $openGamesCount = RouletteGame::query()
-            ->whereOpen(true)
+            ->whereResult(null)
             ->count();
 
         if ($openGamesCount === 0) {
             RouletteGame::create();
+        }
+
+        if ($openGamesCount > 1) {
+            throw new MultipleOpenRouletteGames;
         }
     }
 }
