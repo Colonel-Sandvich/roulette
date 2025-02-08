@@ -3,4 +3,5 @@
 
 # This command runs the queue worker.
 # An alternative is to use the php artisan queue:listen command
+echo "Start the queue worker"
 php artisan queue:work
