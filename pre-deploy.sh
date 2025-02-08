@@ -4,9 +4,6 @@
 # Exit the script if any command fails
 set -e
 
-#
-ls . /db
-
 echo "What is the value of DB_DATABASE";
 echo "$DB_DATABASE";
 
@@ -15,14 +12,16 @@ if [ ! -d "/db"]; then
     exit 1
 fi
 
+ls . / /db
+
 if [ ! -f "$DB_DATABASE" ]; then
     echo "Database file does not exist. Creating at: $DB_DATABASE"
-    
+
     touch "$DB_DATABASE"
-    
+
     # Ensure proper permissions
     chmod 644 "$DB_DATABASE"
-    
+
     echo "Database file created successfully."
 else
     echo "Database file already exists at: $DB_DATABASE"
