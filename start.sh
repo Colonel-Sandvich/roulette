@@ -17,16 +17,24 @@ else
     echo "Database file already exists at: $DB_DATABASE"
 fi
 
+# Nixpacks copies build into /app
+cd /app
+
 # Run pending migrations
 php artisan migrate --force
 
 # Cache the various components of the Laravel application
 php artisan optimize
 
+chmod +x ./run-cron.sh
+chmod +x ./run-worker.sh
+
 # Set up nginx conf and run nginx
 node /assets/scripts/prestart.mjs /assets/nginx.template.conf /nginx.conf
 
 (
     php-fpm -y /assets/php-fpm.conf &
-    nginx -c /nginx.conf
+    nginx -c /nginx.conf &
+    ./run-cron.sh &
+    ./run-worker.sh &
 )
