@@ -18,7 +18,7 @@ else
 fi
 
 # Run pending migrations
-php artisan migrate
+php artisan migrate --force
 
 # Cache the various components of the Laravel application
 php artisan optimize
