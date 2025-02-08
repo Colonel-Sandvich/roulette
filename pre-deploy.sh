@@ -4,6 +4,7 @@
 # Exit the script if any command fails
 set -e
 
+#
 ls . /db
 
 echo "What is the value of DB_DATABASE";
