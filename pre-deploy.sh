@@ -4,8 +4,15 @@
 # Exit the script if any command fails
 set -e
 
-ls . /db /app ./app
+ls . /db
+
+echo "What is the value of DB_DATABASE";
 echo "$DB_DATABASE";
+
+if [ ! -d "/db"]; then
+    echo "/db does not exist!???!?!???!?!?!??!"
+    exit 1
+fi
 
 if [ ! -f "$DB_DATABASE" ]; then
     echo "Database file does not exist. Creating at: $DB_DATABASE"
