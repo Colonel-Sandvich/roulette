@@ -4,7 +4,7 @@
 # Exit the script if any command fails
 set -e
 
-chmod -R 644 "$RAILWAY_VOLUME_MOUNT_PATH"
+chmod -R 664 "$RAILWAY_VOLUME_MOUNT_PATH"
 
 if [ ! -f "$DB_DATABASE" ]; then
     echo "Database file does not exist. Creating at: $DB_DATABASE"
