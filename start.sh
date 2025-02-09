@@ -28,11 +28,16 @@ chmod +x run-worker.sh
 
 echo "Starting server and workers..."
 
-# Set up nginx conf and run nginx
-node /assets/scripts/prestart.mjs /assets/nginx.template.conf /nginx.conf &&
-    (
-        php-fpm -y /assets/php-fpm.conf &
-        nginx -c /nginx.conf &
-        run-cron.sh &
-        run-worker.sh &
-    )
+node /assets/scripts/prestart.mjs /assets/nginx.template.conf /nginx.conf && (
+    php-fpm -y /assets/php-fpm.conf &
+    nginx -c /nginx.conf
+)
+
+# # Set up nginx conf and run nginx
+# (
+#     node /assets/scripts/prestart.mjs /assets/nginx.template.conf /nginx.conf &
+#     php-fpm -y /assets/php-fpm.conf &
+#     nginx -c /nginx.conf &
+#     run-cron.sh &
+#     run-worker.sh &
+# )
