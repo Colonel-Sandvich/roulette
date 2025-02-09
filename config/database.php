@@ -39,9 +39,9 @@ return [
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-            'busy_timeout' => null, // TODO: 5000 in prod IF it keeps transaction row locking guarantees
-            'journal_mode' => env('DB_JOURNAL_MODE'), // TODO: 'WAL' in prod
-            'synchronous' => env('DB_SYNCHRONOUS'), // TODO: 'NORMAL' in prod,
+            'busy_timeout' => env('DB_BUSY_TIMEOUT'),
+            'journal_mode' => env('DB_JOURNAL_MODE'),
+            'synchronous' => env('DB_SYNCHRONOUS'),
         ],
 
         'mysql' => [

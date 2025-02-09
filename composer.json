@@ -70,7 +70,7 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "bunx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan schedule:work\" \"php artisan pail --timeout=0\" \"bun run dev\" --names=server,queue,schedule,logs,vite"
+            "bunx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"sh run-cron.sh\" \"php artisan pail --timeout=0\" \"bun run dev\" --names=server,queue,schedule,logs,vite"
         ],
         "lint": [
             "vendor/bin/phpstan analyse --memory-limit 1G"
