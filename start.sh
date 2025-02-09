@@ -4,8 +4,6 @@
 # Exit the script if any command fails
 set -e
 
-ls -lah "$RAILWAY_VOLUME_MOUNT_PATH"
-
 chmod -R 777 "$RAILWAY_VOLUME_MOUNT_PATH"
 
 ls -lah "$RAILWAY_VOLUME_MOUNT_PATH"
@@ -19,8 +17,6 @@ if [ ! -f "$DB_DATABASE" ]; then
 else
     echo "Database file already exists at: $DB_DATABASE"
 fi
-
-php artisan db:reset
 
 # Run pending migrations
 php artisan migrate --force

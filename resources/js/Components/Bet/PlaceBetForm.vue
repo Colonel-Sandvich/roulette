@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useForm } from "@inertiajs/vue3";
-import { computed } from "vue";
+import { computed, onUnmounted, ref } from "vue";
 import PrimaryButton from "../PrimaryButton.vue";
 import RouletteGrid from "../Roulette/RouletteGrid.vue";
 
@@ -26,11 +26,32 @@ function submit() {
 }
 
 const disabled = computed(() => betsClosed || form.processing);
+
+const secondsLeft = ref();
+
+const timer = setInterval(() => {
+  secondsLeft.value = 60 - new Date().getSeconds();
+}, 1000);
+onUnmounted(() => clearInterval(timer));
+
+const betsClosedText = computed(() => {
+  if (betsClosed) {
+    return "BETS CLOSED";
+  }
+
+  // > 52 because it might show Closing in 60 when we hit the next minute but we haven't yet seen the
+  // server process the game
+  if (secondsLeft.value < 3 || secondsLeft.value > 52) {
+    return `BETS CLOSING`;
+  }
+
+  return `BETS OPEN (Closing in ${secondsLeft.value})`;
+});
 </script>
 
 <template>
   <div class="h-6">
-    <p>{{ betsClosed ? "BETS CLOSED" : "BETS OPEN" }}</p>
+    <p>{{ betsClosedText }}</p>
   </div>
   <form @submit.prevent="submit">
     <div class="flex flex-col gap-4">
