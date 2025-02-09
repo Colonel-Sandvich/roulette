@@ -6,8 +6,8 @@ set -e
 
 ls -lah "$RAILWAY_VOLUME_MOUNT_PATH"
 
-chmod -R 664 "$RAILWAY_VOLUME_MOUNT_PATH"
-chown -R www-data:www-data "$RAILWAY_VOLUME_MOUNT_PATH"
+chmod -R 777 "$RAILWAY_VOLUME_MOUNT_PATH"
+chown -R root:root "$RAILWAY_VOLUME_MOUNT_PATH"
 
 ls -lah "$RAILWAY_VOLUME_MOUNT_PATH"
 
@@ -30,20 +30,14 @@ php artisan optimize
 chmod +x run-cron.sh
 chmod +x run-worker.sh
 
+# Set up nginx conf
+node /assets/scripts/prestart.mjs /assets/nginx.template.conf /nginx.conf
+
 echo "Starting server and workers..."
 
-node /assets/scripts/prestart.mjs /assets/nginx.template.conf /nginx.conf && (
+(
     run-cron.sh &
     run-worker.sh &
     php-fpm -y /assets/php-fpm.conf &
     nginx -c /nginx.conf
 )
-
-# # Set up nginx conf and run nginx
-# (
-#     node /assets/scripts/prestart.mjs /assets/nginx.template.conf /nginx.conf &
-#     php-fpm -y /assets/php-fpm.conf &
-#     nginx -c /nginx.conf &
-#     run-cron.sh &
-#     run-worker.sh &
-# )
