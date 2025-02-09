@@ -21,9 +21,9 @@ export default defineConfig({
     }),
     vueDevTools({
       appendTo: "app.ts",
-      launchEditor: "phpstorm",
+      launchEditor: "codium",
     }),
-    tailwindcss()
+    tailwindcss(),
   ],
-  envPrefix: ["VITE_", "ROULETTE_"]
+  envPrefix: ["VITE_", "ROULETTE_"],
 });
