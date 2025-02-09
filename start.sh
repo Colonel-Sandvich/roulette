@@ -4,13 +4,12 @@
 # Exit the script if any command fails
 set -e
 
+chmod -R 644 "$RAILWAY_VOLUME_MOUNT_PATH"
+
 if [ ! -f "$DB_DATABASE" ]; then
     echo "Database file does not exist. Creating at: $DB_DATABASE"
 
     touch "$DB_DATABASE"
-
-    # Ensure proper permissions
-    chmod 644 "$DB_DATABASE"
 
     echo "Database file created successfully."
 else
@@ -29,6 +28,8 @@ chmod +x run-worker.sh
 echo "Starting server and workers..."
 
 node /assets/scripts/prestart.mjs /assets/nginx.template.conf /nginx.conf && (
+    run-cron.sh &
+    run-worker.sh &
     php-fpm -y /assets/php-fpm.conf &
     nginx -c /nginx.conf
 )
