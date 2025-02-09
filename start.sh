@@ -7,6 +7,7 @@ set -e
 ls -lah "$RAILWAY_VOLUME_MOUNT_PATH"
 
 chmod -R 774 "$RAILWAY_VOLUME_MOUNT_PATH"
+chown -R www-data:www-data "$RAILWAY_VOLUME_MOUNT_PATH"
 
 ls -lah "$RAILWAY_VOLUME_MOUNT_PATH"
 
