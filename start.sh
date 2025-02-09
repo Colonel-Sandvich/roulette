@@ -20,6 +20,8 @@ else
     echo "Database file already exists at: $DB_DATABASE"
 fi
 
+php artisan db:reset
+
 # Run pending migrations
 php artisan migrate --force
 
