@@ -11,5 +11,5 @@ $schedule = Schedule::command('roulette-game:process')
 $schedule->repeatSeconds = config('roulette.game_length_in_seconds');
 
 // Reset database every day
-Schedule::command('migrate:fresh')
+Schedule::command('db:reset')
     ->daily();
