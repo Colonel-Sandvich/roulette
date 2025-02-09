@@ -4,7 +4,12 @@
 # Exit the script if any command fails
 set -e
 
+ls -lah "$RAILWAY_VOLUME_MOUNT_PATH"
+
 chmod -R 664 "$RAILWAY_VOLUME_MOUNT_PATH"
+chown -R www-data:www-data "$RAILWAY_VOLUME_MOUNT_PATH"
+
+ls -lah "$RAILWAY_VOLUME_MOUNT_PATH"
 
 if [ ! -f "$DB_DATABASE" ]; then
     echo "Database file does not exist. Creating at: $DB_DATABASE"
