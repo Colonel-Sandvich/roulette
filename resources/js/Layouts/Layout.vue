@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { Head } from "@inertiajs/vue3";
 import AuthenticatedLayout from "./AuthenticatedLayout.vue";
 </script>
 
 <template>
-  <Head title="Dashboard" />
-
   <AuthenticatedLayout>
     <template v-if="$slots.header" #header>
       <slot name="header"></slot>
