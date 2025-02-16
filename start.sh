@@ -4,12 +4,7 @@
 # Exit the script if any command fails
 set -e
 
-chmod -R 777 "$RAILWAY_VOLUME_MOUNT_PATH"
-
 ls -lah "$RAILWAY_VOLUME_MOUNT_PATH"
-
-# TODO: remove after reset
-rm "$DB_DATABASE"
 
 if [ ! -f "$DB_DATABASE" ]; then
     echo "Database file does not exist. Creating at: $DB_DATABASE"
@@ -20,6 +15,9 @@ if [ ! -f "$DB_DATABASE" ]; then
 else
     echo "Database file already exists at: $DB_DATABASE"
 fi
+
+# Update database permissions to be rwx for all users
+chmod -R 777 "$RAILWAY_VOLUME_MOUNT_PATH"
 
 # Run pending migrations
 php artisan migrate --force
