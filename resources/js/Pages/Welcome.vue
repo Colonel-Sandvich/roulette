@@ -14,7 +14,8 @@ defineProps<{
   <Head title="Welcome" />
   <div class="flex justify-center">
     <div
-      class="flex min-h-screen w-full max-w-2xl flex-col items-center justify-center px-6 selection:bg-[#FF2D20] selection:text-white lg:max-w-7xl">
+      class="flex min-h-screen w-full max-w-2xl flex-col items-center justify-center px-6
+        selection:bg-[#FF2D20] selection:text-white lg:max-w-7xl">
       <header class="grid w-full grid-cols-3 items-center py-6">
         <ApplicationLogo class="size-16 fill-current text-gray-500" />
         <h1 class="col-start-2 text-center text-xl font-bold">Welcome to Matt's Casino</h1>
@@ -22,21 +23,24 @@ defineProps<{
           <Link
             v-if="$page.props.auth.user"
             :href="route('dashboard')"
-            class="rounded-md bg-blue-600 px-3 py-2 ring-1 ring-transparent transition hover:text-black/50 focus:outline-hidden focus-visible:ring-[#FF2D20]">
+            class="rounded-md bg-blue-600 px-3 py-2 ring-1 ring-transparent transition
+              hover:text-black/50 focus:outline-hidden focus-visible:ring-[#FF2D20]">
             Dashboard
           </Link>
 
           <template v-else>
             <Link
               :href="route('login')"
-              class="rounded-md bg-blue-600 px-3 py-2 ring-1 ring-transparent transition hover:text-black/50 focus:outline-hidden focus-visible:ring-[#FF2D20]">
+              class="rounded-md bg-blue-600 px-3 py-2 ring-1 ring-transparent transition
+                hover:text-black/50 focus:outline-hidden focus-visible:ring-[#FF2D20]">
               Log in
             </Link>
 
             <Link
               v-if="canRegister"
               :href="route('register')"
-              class="rounded-md bg-blue-600 px-3 py-2 ring-1 ring-transparent transition hover:text-black/50 focus:outline-hidden focus-visible:ring-[#FF2D20]">
+              class="rounded-md bg-blue-600 px-3 py-2 ring-1 ring-transparent transition
+                hover:text-black/50 focus:outline-hidden focus-visible:ring-[#FF2D20]">
               Register
             </Link>
           </template>

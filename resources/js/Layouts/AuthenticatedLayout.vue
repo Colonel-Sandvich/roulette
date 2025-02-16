@@ -46,7 +46,10 @@ const showingNavigationDropdown = ref(false);
                     <span class="inline-flex rounded-md">
                       <button
                         type="button"
-                        class="inline-flex cursor-pointer items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm leading-4 font-medium text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-hidden">
+                        class="inline-flex cursor-pointer items-center rounded-md border
+                          border-transparent bg-white px-3 py-2 text-sm leading-4 font-medium
+                          text-gray-500 transition duration-150 ease-in-out hover:text-gray-700
+                          focus:outline-hidden">
                         {{ $page.props.auth.user.name }}
 
                         <svg
@@ -76,7 +79,9 @@ const showingNavigationDropdown = ref(false);
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
               <button
-                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-hidden"
+                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400
+                  transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500
+                  focus:bg-gray-100 focus:text-gray-500 focus:outline-hidden"
                 @click="showingNavigationDropdown = !showingNavigationDropdown">
                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                   <path

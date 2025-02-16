@@ -1,8 +1,10 @@
 {
     "plugins": [
         "prettier-plugin-organize-imports",
-        "prettier-plugin-tailwindcss"
+        "prettier-plugin-tailwindcss",
+        "prettier-plugin-classnames"
     ],
     "htmlWhitespaceSensitivity": "ignore",
-    "bracketSameLine": true
+    "bracketSameLine": true,
+    "endingPosition": "absolute-with-indent"
 }

@@ -23,7 +23,9 @@ function addToBalance() {
       </div>
       <Link :href="route('roulette.index')" class="flex justify-center">
         <div
-          class="inline-flex cursor-pointer items-center rounded-lg bg-green-700 px-8 py-6 text-lg font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out focus:bg-green-400">
+          class="inline-flex cursor-pointer items-center rounded-lg bg-green-700 px-8 py-6 text-lg
+            font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out
+            focus:bg-green-400">
           Head to the table
         </div>
       </Link>

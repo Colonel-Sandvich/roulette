@@ -8,6 +8,9 @@ chmod -R 777 "$RAILWAY_VOLUME_MOUNT_PATH"
 
 ls -lah "$RAILWAY_VOLUME_MOUNT_PATH"
 
+# TODO: remove after reset
+rm "$DB_DATABASE"
+
 if [ ! -f "$DB_DATABASE" ]; then
     echo "Database file does not exist. Creating at: $DB_DATABASE"
 

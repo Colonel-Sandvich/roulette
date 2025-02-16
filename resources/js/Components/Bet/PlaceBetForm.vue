@@ -27,20 +27,18 @@ function submit() {
 
 const disabled = computed(() => betsClosed || form.processing);
 
-const secondsLeft = ref<number>();
+const secondsLeft = ref<number>(getSecondsLeft());
 
-const timer = setInterval(() => {
-  secondsLeft.value = 60 - new Date().getSeconds();
-}, 1000);
+function getSecondsLeft() {
+  return 60 - new Date().getSeconds();
+}
+
+const timer = setInterval(() => (secondsLeft.value = getSecondsLeft()), 1000);
 onUnmounted(() => clearInterval(timer));
 
 const betsClosedText = computed(() => {
   if (betsClosed) {
     return "BETS CLOSED";
-  }
-
-  if (secondsLeft.value === undefined) {
-    return "BETS OPEN";
   }
 
   // > 52 because it might show Closing in 60 when we hit the next minute but we haven't yet seen the
