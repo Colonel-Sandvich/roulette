@@ -9,6 +9,7 @@ use App\Jobs\ProcessBets;
 use App\Models\RouletteGame;
 use App\Roulette\Exceptions\MultipleOpenRouletteGames;
 use App\Roulette\GetCurrentRouletteGame;
+use App\Roulette\PreviousRouletteGamesStore;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -18,8 +19,10 @@ class ProcessRouletteGameCommand extends Command
 
     protected $description = 'Close the current roulette game with a result and create a new one, dispatching a job to process bets as well';
 
-    public function handle(GetCurrentRouletteGame $getCurrentRouletteGame): void
-    {
+    public function handle(
+        GetCurrentRouletteGame $getCurrentRouletteGame,
+        PreviousRouletteGamesStore $previousRouletteGamesStore,
+    ): void {
         $this->ensureOneOpenRouletteGame();
 
         $currentGame = $getCurrentRouletteGame();
@@ -34,6 +37,8 @@ class ProcessRouletteGameCommand extends Command
         });
 
         dispatch(new ProcessBets($currentGame->id));
+
+        $previousRouletteGamesStore->update();
     }
 
     /** @throws MultipleOpenRouletteGames */

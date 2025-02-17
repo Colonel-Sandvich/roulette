@@ -5,7 +5,7 @@ import Tile from "./Tile.vue";
 
 defineProps<{
   bets: Array<Bet>;
-  result: number | null;
+  result: number | undefined;
 }>();
 </script>
 

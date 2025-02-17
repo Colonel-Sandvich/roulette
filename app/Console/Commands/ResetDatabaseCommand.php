@@ -5,38 +5,34 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Database\Schema\Grammars\SQLiteGrammar;
+use Illuminate\Database\SQLiteConnection;
 use Illuminate\Support\Facades\DB;
 
 class ResetDatabaseCommand extends Command
 {
     protected $signature = 'db:reset';
 
-    protected $description = 'Reset the database';
+    protected $description = 'Reset the sqlite database';
 
     public function handle(): void
     {
-        if (config('database.default') !== 'sqlite') {
+        $connection = DB::connection();
+        $grammar = $connection->getSchemaGrammar();
+
+        if (! $connection instanceof SQLiteConnection) {
+            return;
+        }
+        if (! $grammar instanceof SQLiteGrammar) {
             return;
         }
 
-        DB::statement(/** @lang SQLite */ "PRAGMA WRITABLE_SCHEMA = 1");
-        DB::statement(
-            /** @lang SQLite */
-            "DELETE FROM sqlite_master WHERE type in ('table', 'index', 'trigger')",
-        );
-        DB::statement(/** @lang SQLite */ "PRAGMA WRITABLE_SCHEMA = 0");
-        DB::statement(/** @lang SQLite */ "VACUUM");
+        // https://github.com/laravel/framework/discussions/53044#discussioncomment-10861735
+        $connection->statement($grammar->compileEnableWriteableSchema());
+        $connection->statement($grammar->compileDropAllTables());
+        $connection->statement($grammar->compileEnableWriteableSchema());
+        $connection->statement($grammar->compileRebuild());
 
-        /** @var object{'journal_mode': string} $result */
-        [$result] = DB::select(/** @lang SQLite */ "PRAGMA JOURNAL_MODE");
-
-        if ($result->journal_mode !== 'wal') {
-            throw new \Exception(
-                "Database reset failed. Journal mode is not WAL",
-            );
-        }
-
-        Artisan::call('migrate', ['--force' => true]);
+        $this->call('migrate', ['--force' => true]);
     }
 }

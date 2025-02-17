@@ -36,8 +36,10 @@ Route::prefix('profile')
 Route::prefix('roulette')
     ->name('roulette.')
     ->middleware(['auth', 'verified'])
+    ->controller(RouletteController::class)
     ->group(function () {
-        Route::get('/', [RouletteController::class, 'index'])->name('index');
+        Route::get('/', 'index')->name('index');
+        Route::get('/stream', 'stream')->name('stream');
     });
 
 Route::prefix('bet')

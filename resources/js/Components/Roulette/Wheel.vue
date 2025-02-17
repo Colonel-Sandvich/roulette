@@ -4,10 +4,10 @@ import { sleep } from "@/utils/sleep";
 import { computed, ref, watch } from "vue";
 
 const { spinTo } = defineProps<{
-  spinTo: number | null;
+  spinTo: number | undefined;
 }>();
 
-const spinToIndex = computed(() => (spinTo !== null ? numbers.indexOf(spinTo) : null));
+const spinToIndex = computed(() => (spinTo !== undefined ? numbers.indexOf(spinTo) : undefined));
 
 const showBall = ref(false);
 
@@ -15,7 +15,7 @@ const showBall = ref(false);
 watch(
   spinToIndex,
   async () => {
-    if (spinToIndex.value !== null) {
+    if (spinToIndex.value !== undefined) {
       return;
     }
 
@@ -39,7 +39,8 @@ watch(
       style="animation-duration: 24s"
       class="plate relative m-3 size-[350px] animate-spin rounded-full">
       <div
-        class="absolute inset-[12%] z-1 block rounded-full border-stone-300 bg-black/65 inset-ring-3 inset-ring-zinc-500"></div>
+        class="absolute inset-[12%] z-1 block rounded-full border-stone-300 bg-black/65 inset-ring-3
+          inset-ring-zinc-500"></div>
       <ul id="inner" class="relative block size-[350px]">
         <p
           v-if="showBall"
@@ -52,7 +53,8 @@ watch(
           :key="number"
           :style="`transform: rotate(${i * (360 / 37)}deg)`"
           style="left: calc(50% - 16px); border-top-width: 175px"
-          class="absolute top-0 box-border inline-block h-4 w-8 origin-bottom border-x-[16px] border-x-transparent"
+          class="absolute top-0 box-border inline-block h-4 w-8 origin-bottom border-x-[16px]
+            border-x-transparent"
           :class="[
             number === 0
               ? 'border-t-green-500'
@@ -61,15 +63,18 @@ watch(
                 : 'border-t-black',
           ]">
           <span
-            class="absolute -top-[175px] -left-[17px] inline-block w-8 scale-y-180 pt-3 text-center text-xl leading-none">
+            class="absolute -top-[175px] -left-[17px] inline-block w-8 scale-y-180 pt-3 text-center
+              text-xl leading-none">
             {{ number }}
           </span>
         </li>
         <div
-          class="absolute inset-[24%] z-3 block rounded-full border-3 border-zinc-500 bg-neutral-600"></div>
+          class="absolute inset-[24%] z-3 block rounded-full border-3 border-zinc-500
+            bg-neutral-600"></div>
       </ul>
       <div
-        class="absolute -inset-1.5 block rounded-full border-6 border-[gold] inset-ring-2 ring-2 ring-yellow-200 inset-ring-black"></div>
+        class="absolute -inset-1.5 block rounded-full border-6 border-[gold] inset-ring-2 ring-2
+          ring-yellow-200 inset-ring-black"></div>
     </div>
   </div>
 </template>

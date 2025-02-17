@@ -5,30 +5,25 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Bet;
-use App\Models\RouletteGame;
 use App\Roulette\GetCurrentRouletteGame;
+use App\Roulette\PreviousRouletteGamesStore;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Redis;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class RouletteController extends Controller
 {
     public function __construct(
         public GetCurrentRouletteGame $getCurrentRouletteGame,
+        public PreviousRouletteGamesStore $previousRouletteGamesStore,
     ) {}
 
     public function index(): Response
     {
-        $rouletteGames = RouletteGame::query()
-            ->whereNotNull('result')
-            ->latest()
-            // +1 because we hide last game while ball spins,
-            // this prevents layout shift
-            ->limit(config('roulette.previous_games_display_count') + 1)
-            ->get();
-
         return Inertia::render('Roulette', [
-            'previousGames' => $rouletteGames,
+            'previousGames' => $this->previousRouletteGamesStore->get(),
             'bets' => fn () => $this->loadBets(),
         ]);
     }
@@ -42,5 +37,40 @@ class RouletteController extends Controller
             ->whereWalletId(getUser()->walletId())
             ->whereRouletteGameId($currentGame->id)
             ->get();
+    }
+
+    /** @var array<string, string> */
+    public const array STREAM_HEADERS = [
+        'Content-Type' => 'text/event-stream',
+        'Cache-Control' => 'no-cache',
+        'Connection' => 'keep-alive',
+        'X-Accel-Buffering' => 'no',
+    ];
+
+    // Use Server-Sent Events to inform the FE that the last game has finished
+    public function stream(): StreamedResponse
+    {
+        $response = new StreamedResponse;
+
+        $response->headers->add(self::STREAM_HEADERS);
+
+        ini_set('default_socket_timeout', -1);
+        set_time_limit(0);
+
+        $response->setCallback(function () {
+            Redis::subscribe(config('roulette.cache.previous_games'),
+                function () {
+                    // Send `game_finished` event with no data
+                    // It's easier to get inertia to reload the page than
+                    // merge this data in with inertia's props
+                    echo "event: game_finished\n";
+                    echo "data: \n\n";
+
+                    ob_flush();
+                    flush();
+                });
+        });
+
+        return $response;
     }
 }

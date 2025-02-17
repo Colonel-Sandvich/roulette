@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Bet, ClosedGame } from "@/types/roulette";
-import { router, usePoll } from "@inertiajs/vue3";
-import { computed, ref, watch } from "vue";
+import { router } from "@inertiajs/vue3";
+import { computed, onUnmounted, ref, watch } from "vue";
 import PlaceBetForm from "../Bet/PlaceBetForm.vue";
 import Bets from "./Bets.vue";
 import GamesList from "./GamesList.vue";
@@ -12,52 +12,55 @@ const { previousGames, bets } = defineProps<{
   bets: Array<Bet>;
 }>();
 
-const currentGame = computed(() => previousGames[0]!);
+const currentGame = ref<ClosedGame>();
 
-const result = computed(() => (betsClosed.value ? currentGame.value.result : null));
-
-const previousGamesView = computed(() =>
-  previousGames.filter((game) => {
-    // If bets are open show all games
-    if (!betsClosed.value) {
-      return true;
-    }
-
-    // Otherwise filter out most recent result while the ball is still spinning
-    return game.id !== currentGame.value.id;
-  }),
-);
-
-const betsClosed = ref(false);
+const result = computed(() => currentGame.value?.result);
 
 // New game has just finished
 // Close bets and show the result for 10 seconds
 // Reload including bets after
 watch(
-  () => currentGame.value.id,
+  () => previousGames[0]?.id,
   () => {
-    betsClosed.value = true;
+    currentGame.value = previousGames[0];
 
     setTimeout(() => {
-      betsClosed.value = false;
+      currentGame.value = undefined;
       router.reload();
-    }, 10000);
+    }, 10 * 1000);
   },
 );
 
-usePoll(2000, {
-  // Don't need to refresh bets every 2 seconds, they update on submission
-  except: ["bets"],
+// TODO: Refactor SSE and polling as fallback into composable
+// const { start, stop } = usePoll(
+//   2000,
+//   {
+//     // Don't need to refresh bets every 2 seconds, they update on submission
+//     except: ["bets"],
+//   },
+//   {
+//     autoStart: false,
+//   },
+// );
+
+const source = new EventSource(route("roulette.stream"));
+
+source.addEventListener("game_finished", function () {
+  router.reload({
+    except: ["bets"],
+  });
 });
+
+onUnmounted(() => source.close());
 </script>
 
 <template>
   <div class="flex gap-8 px-10 py-6">
-    <GamesList :games="previousGamesView" />
+    <GamesList :games="previousGames" :currentGame />
 
     <div class="flex grow flex-col items-center gap-4">
       <Wheel :spinTo="result" />
-      <PlaceBetForm :betsClosed />
+      <PlaceBetForm :betsClosed="result !== undefined" />
     </div>
 
     <Bets :bets :result />
