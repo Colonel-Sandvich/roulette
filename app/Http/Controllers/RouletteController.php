@@ -58,6 +58,11 @@ class RouletteController extends Controller
         set_time_limit(0);
 
         $response->setCallback(function () {
+            echo ": heartbeat\n\n";
+
+            ob_flush();
+            flush();
+
             Redis::subscribe(
                 config('roulette.cache.previous_games'),
                 function () {
