@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { useSSE } from "@/composables/useSSE";
 import { Bet, ClosedGame } from "@/types/roulette";
 import { router } from "@inertiajs/vue3";
-import { computed, ref, watch } from "vue";
+import { computed, onUnmounted, ref, watch } from "vue";
 import PlaceBetForm from "../Bet/PlaceBetForm.vue";
 import Bets from "./Bets.vue";
 import GamesList from "./GamesList.vue";
@@ -32,13 +31,24 @@ watch(
   },
 );
 
-const { addEventListener } = useSSE(route("roulette.stream"));
+const source = new EventSource(route("roulette.stream"));
 
-addEventListener("game_finished", function () {
+source.addEventListener("game_finished", function () {
   router.reload({
     except: ["bets"],
   });
+  console.log("event!");
 });
+
+onUnmounted(() => source.close());
+
+// const { addEventListener } = useSSE(route("roulette.stream"));
+
+// addEventListener("game_finished", function () {
+//   router.reload({
+//     except: ["bets"],
+//   });
+// });
 </script>
 
 <template>
