@@ -60,7 +60,9 @@ class RouletteController extends Controller
         $response->setCallback(function () {
             echo ": heartbeat\n\n";
 
-            ob_flush();
+            if (ob_get_level() > 0) {
+                ob_flush();
+            }
             flush();
 
             Redis::subscribe(
