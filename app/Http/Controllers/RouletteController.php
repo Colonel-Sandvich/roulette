@@ -58,6 +58,10 @@ class RouletteController extends Controller
         ini_set('default_socket_timeout', -1);
         set_time_limit(0);
 
+        register_shutdown_function(function () {
+            info("SSE connection down");
+        });
+
         $response->setCallback(function () {
 //            echo ": heartbeat\n\n";
 //
