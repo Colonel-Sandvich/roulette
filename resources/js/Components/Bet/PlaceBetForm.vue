@@ -17,12 +17,16 @@ const form = useForm({
 type ExtendedErrors = typeof form.errors & { balance?: string };
 const errors = computed(() => form.errors as ExtendedErrors);
 
+let clearFormErrorsTimer: number | undefined = undefined;
+
 function submit() {
   form.submit("post", route("bet.store"), {
     preserveScroll: true,
+    onError: () => {
+      clearTimeout(clearFormErrorsTimer);
+      clearFormErrorsTimer = setTimeout(() => form.clearErrors(), 10000);
+    },
   });
-
-  setTimeout(() => form.clearErrors(), 10000);
 }
 
 const disabled = computed(() => betsClosed || form.processing);
@@ -77,7 +81,7 @@ const betsClosedText = computed(() => {
             name="amount"
             placeholder="1"
             min="1"
-            max="1000"
+            max="10000"
             required />
         </div>
         <PrimaryButton type="submit" :disabled>Place Bet</PrimaryButton>
