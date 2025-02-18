@@ -75,6 +75,8 @@ class RouletteController extends Controller
                     echo "event: game_finished\n";
                     echo "data: \n\n";
 
+                    info('Game has finished!!!!');
+
                     ob_flush();
                     flush();
                 },
