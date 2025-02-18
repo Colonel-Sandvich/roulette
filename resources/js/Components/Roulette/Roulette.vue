@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { useSSE } from "@/composables/useSSE";
 import { Bet, ClosedGame } from "@/types/roulette";
 import { router } from "@inertiajs/vue3";
-import { computed, onUnmounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import PlaceBetForm from "../Bet/PlaceBetForm.vue";
 import Bets from "./Bets.vue";
 import GamesList from "./GamesList.vue";
@@ -31,27 +32,13 @@ watch(
   },
 );
 
-// TODO: Refactor SSE and polling as fallback into composable
-// const { start, stop } = usePoll(
-//   2000,
-//   {
-//     // Don't need to refresh bets every 2 seconds, they update on submission
-//     except: ["bets"],
-//   },
-//   {
-//     autoStart: false,
-//   },
-// );
+const { addEventListener } = useSSE(route("roulette.stream"));
 
-const source = new EventSource(route("roulette.stream"));
-
-source.addEventListener("game_finished", function () {
+addEventListener("game_finished", function () {
   router.reload({
     except: ["bets"],
   });
 });
-
-onUnmounted(() => source.close());
 </script>
 
 <template>

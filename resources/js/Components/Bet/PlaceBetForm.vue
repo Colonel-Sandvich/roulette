@@ -45,9 +45,9 @@ const betsClosedText = computed(() => {
     return "BETS CLOSED";
   }
 
-  // > 52 because it might show Closing in 60 when we hit the next minute but we haven't yet seen the
+  // > 55 because it might show Closing in 60 when we hit the next minute but we haven't yet seen the
   // server process the game
-  if (secondsLeft.value < 3 || secondsLeft.value > 52) {
+  if (secondsLeft.value < 3 || secondsLeft.value > 55) {
     return `BETS CLOSING`;
   }
 

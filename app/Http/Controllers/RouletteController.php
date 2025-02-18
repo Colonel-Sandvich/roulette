@@ -58,7 +58,8 @@ class RouletteController extends Controller
         set_time_limit(0);
 
         $response->setCallback(function () {
-            Redis::subscribe(config('roulette.cache.previous_games'),
+            Redis::subscribe(
+                config('roulette.cache.previous_games'),
                 function () {
                     // Send `game_finished` event with no data
                     // It's easier to get inertia to reload the page than
@@ -68,7 +69,8 @@ class RouletteController extends Controller
 
                     ob_flush();
                     flush();
-                });
+                },
+            );
         });
 
         return $response;

@@ -36,9 +36,9 @@ class ProcessRouletteGameCommand extends Command
             RouletteGame::create();
         });
 
-        dispatch(new ProcessBets($currentGame->id));
-
         $previousRouletteGamesStore->update();
+
+        dispatch(new ProcessBets($currentGame->id));
     }
 
     /** @throws MultipleOpenRouletteGames */
