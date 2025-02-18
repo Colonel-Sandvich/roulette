@@ -45,6 +45,7 @@ class RouletteController extends Controller
         'Cache-Control' => 'no-cache',
         'Connection' => 'keep-alive',
         'X-Accel-Buffering' => 'no',
+        'X-Accel-Expires' => 0,
     ];
 
     // Use Server-Sent Events to inform the FE that the last game has finished
@@ -58,12 +59,12 @@ class RouletteController extends Controller
         set_time_limit(0);
 
         $response->setCallback(function () {
-            echo ": heartbeat\n\n";
-
-            if (ob_get_level() > 0) {
-                ob_flush();
-            }
-            flush();
+//            echo ": heartbeat\n\n";
+//
+//            if (ob_get_level() > 0) {
+//                ob_flush();
+//            }
+//            flush();
 
             Redis::subscribe(
                 config('roulette.cache.previous_games'),
