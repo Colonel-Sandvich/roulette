@@ -85,34 +85,4 @@ class RouletteController extends Controller
 
         return $response;
     }
-
-    public function testStream(): StreamedResponse
-    {
-        ini_set('default_socket_timeout', -1);
-        set_time_limit(0);
-
-        return response()->stream(function () {
-            if (ob_get_level() === 0) {
-                ob_start();
-            }
-
-            while (true) {
-                if (connection_aborted()) {
-                    info("Connection aborted");
-
-                    break;
-                }
-
-                echo "data: Hello!\n\n";
-
-                ob_flush();
-                flush();
-
-                sleep(1);
-                info("Sleeping...");
-            }
-
-            ob_end_flush();
-        }, headers: self::STREAM_HEADERS);
-    }
 }
