@@ -35,9 +35,9 @@ const disabled = computed(() => betsClosed || form.processing);
 
 const secondsLeft = ref<number>(getSecondsLeft());
 
-// Assume `gameLength` <= 60
+// Assumes a `gameLength` of 60
 function getSecondsLeft() {
-  return gameLength - (new Date().getSeconds() % gameLength);
+  return gameLength - new Date().getSeconds();
 }
 
 const timer = setInterval(() => (secondsLeft.value = getSecondsLeft()), 1000);
