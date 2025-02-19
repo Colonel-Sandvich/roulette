@@ -95,6 +95,9 @@ class RouletteController extends Controller
         ini_set('default_socket_timeout', -1);
         set_time_limit(0);
 
+        if (ob_get_level() > 0) {
+            ob_end_flush();
+        }
         return response()->stream(function () {
             while (true) {
                 if (connection_aborted()) {
@@ -104,9 +107,6 @@ class RouletteController extends Controller
                 }
 
                 echo "data: Hello!\n\n";
-
-                ob_flush();
-                flush();
 
                 sleep(1);
                 info("Sleeping...");
