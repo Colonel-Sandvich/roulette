@@ -58,16 +58,14 @@ class RouletteController extends Controller
         ini_set('default_socket_timeout', -1);
         set_time_limit(0);
 
-        register_shutdown_function(function () {
-            info("SSE connection down");
-        });
-
         $response->setCallback(function () {
+            if (ob_get_level() === 0) {
+                ob_start();
+            }
+
             echo ": heartbeat\n\n";
 
-            if (ob_get_level() > 0) {
-                ob_flush();
-            }
+            ob_flush();
             flush();
 
             Redis::subscribe(
@@ -78,8 +76,6 @@ class RouletteController extends Controller
                     // merge this data in with inertia's props
                     echo "event: game_finished\n";
                     echo "data: \n\n";
-
-                    info('Game has finished!!!!');
 
                     ob_flush();
                     flush();
@@ -92,8 +88,6 @@ class RouletteController extends Controller
 
     public function testStream(): StreamedResponse
     {
-        info("Starting a new stream!");
-
         ini_set('default_socket_timeout', -1);
         set_time_limit(0);
 
