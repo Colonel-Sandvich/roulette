@@ -45,7 +45,6 @@ class RouletteController extends Controller
         "Cache-Control" => "no-cache",
         "Connection" => "keep-alive",
         "X-Accel-Buffering" => "no",
-        "X-Accel-Expires" => 0,
     ];
 
     // Use Server-Sent Events to inform the FE that the last game has finished

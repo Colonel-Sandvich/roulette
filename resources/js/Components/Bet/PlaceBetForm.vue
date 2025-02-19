@@ -8,6 +8,8 @@ const { betsClosed } = defineProps<{
   betsClosed: boolean;
 }>();
 
+const gameLength = +import.meta.env.ROULETTE_GAME_LENGTH_IN_SECONDS;
+
 const form = useForm({
   amount: 1,
   position: undefined,
@@ -33,8 +35,9 @@ const disabled = computed(() => betsClosed || form.processing);
 
 const secondsLeft = ref<number>(getSecondsLeft());
 
+// Assume `gameLength` <= 60
 function getSecondsLeft() {
-  return 60 - new Date().getSeconds();
+  return gameLength - (new Date().getSeconds() % gameLength);
 }
 
 const timer = setInterval(() => (secondsLeft.value = getSecondsLeft()), 1000);
@@ -45,9 +48,10 @@ const betsClosedText = computed(() => {
     return "BETS CLOSED";
   }
 
+  // Assuming a `gameLength` of 60 seconds:
   // > 55 because it might show Closing in 60 when we hit the next minute but we haven't yet seen the
   // server process the game
-  if (secondsLeft.value < 3 || secondsLeft.value > 55) {
+  if (secondsLeft.value < 3 || secondsLeft.value > gameLength - 5) {
     return `BETS CLOSING`;
   }
 

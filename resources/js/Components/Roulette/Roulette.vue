@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useSSE } from "@/composables/useSSE";
 import { Bet, ClosedGame } from "@/types/roulette";
-import { router } from "@inertiajs/vue3";
+import { router, usePoll } from "@inertiajs/vue3";
 import { computed, ref, watch } from "vue";
 import PlaceBetForm from "../Bet/PlaceBetForm.vue";
 import Bets from "./Bets.vue";
@@ -32,13 +32,21 @@ watch(
   },
 );
 
-const { addEventListener } = useSSE(route("roulette.stream"));
-
-addEventListener("game_finished", function () {
-  router.reload({
+if (import.meta.env.PROD) {
+  // Railway host has a hard limit of 5 seconds on non-websocket connections
+  // Just fallback to using polling
+  usePoll(2000, {
     except: ["bets"],
   });
-});
+} else {
+  const { addEventListener } = useSSE(route("roulette.stream"));
+
+  addEventListener("game_finished", function () {
+    router.reload({
+      except: ["bets"],
+    });
+  });
+}
 </script>
 
 <template>

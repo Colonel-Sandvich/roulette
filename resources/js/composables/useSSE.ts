@@ -3,21 +3,19 @@ import { onMounted, onUnmounted, ref } from "vue";
 type Callback = () => void;
 
 export function useSSE(url: RequestInfo | URL) {
-  const isStreaming = ref(false);
   const eventListeners = ref<Record<string, Callback>>({});
   let abortController: AbortController | null = null;
+  // If the server closes unexpectedly `reader.read()` will hang indefinitely
+  // We should add a heartbeat timeout that will attempt to reconnect
+  let heartbeatTimeout: number | undefined = undefined;
 
   onMounted(startSSE);
   onUnmounted(stopSSE);
 
   async function startSSE() {
-    if (isStreaming.value) {
-      return;
-    }
-    isStreaming.value = true;
-
     abortController = new AbortController();
     const signal = abortController.signal;
+    resetHearbeat();
 
     try {
       const response = await fetch(url, {
@@ -30,20 +28,15 @@ export function useSSE(url: RequestInfo | URL) {
       const textStream = response.body.pipeThrough(new TextDecoderStream());
       const reader = textStream.getReader();
 
-      let buffer = "";
-
-      while (isStreaming.value) {
+      while (true) {
         const { value, done } = await reader.read();
         if (done) {
           break;
         }
 
-        buffer += value;
+        resetHearbeat();
 
-        console.log(buffer);
-
-        const lines = buffer.split("\n");
-        buffer = lines.pop() || ""; // Keep unfinished line
+        const lines = value.split("\n");
 
         for (const line of lines) {
           if (line.startsWith("event: ")) {
@@ -57,14 +50,28 @@ export function useSSE(url: RequestInfo | URL) {
         console.error("SSE stream error:", error);
         setTimeout(startSSE, 3000);
       }
+    } finally {
+      // If we got here then the SSE is done or we're reconnecting already
+      // We don't want the heartbeat also trying to reconnect
+      clearTimeout(heartbeatTimeout);
     }
   }
 
   function stopSSE() {
-    isStreaming.value = false;
     if (abortController) {
       abortController.abort();
     }
+  }
+
+  function resetHearbeat() {
+    clearTimeout(heartbeatTimeout);
+    heartbeatTimeout = setTimeout(
+      () => {
+        stopSSE();
+        void startSSE();
+      },
+      (+import.meta.env.ROULETTE_GAME_LENGTH_IN_SECONDS + 5) * 1000,
+    );
   }
 
   function addEventListener(eventType: string, callback: () => void) {
@@ -75,5 +82,5 @@ export function useSSE(url: RequestInfo | URL) {
     delete eventListeners.value[eventType];
   }
 
-  return { isStreaming, startSSE, stopSSE, addEventListener, removeEventListener };
+  return { startSSE, stopSSE, addEventListener, removeEventListener };
 }
