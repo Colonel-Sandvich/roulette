@@ -47,6 +47,8 @@ class PreviousRouletteGamesStore
             config('roulette.game_length_in_seconds') + 1,
         );
 
+        info("Publishing event!");
+
         Redis::publish(config('roulette.cache.previous_games'), "");
     }
 }

@@ -2,10 +2,19 @@
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Layout from "@/Layouts/Layout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
+import { onUnmounted } from "vue";
 
 function addToBalance() {
   router.post(route("wallet.update_balance"));
 }
+
+const source = new EventSource(route("roulette.test-stream"));
+
+source.onmessage = () => {
+  console.log("Message receieved!");
+};
+
+onUnmounted(() => source.close());
 </script>
 
 <template>

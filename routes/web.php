@@ -40,6 +40,7 @@ Route::prefix('roulette')
     ->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/stream', 'stream')->name('stream');
+        Route::get('/test-stream', 'testStream')->name('test-stream');
     });
 
 Route::prefix('bet')

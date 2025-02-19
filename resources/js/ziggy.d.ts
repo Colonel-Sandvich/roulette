@@ -8,6 +8,7 @@ declare module 'ziggy-js' {
     "profile.destroy": [],
     "roulette.index": [],
     "roulette.stream": [],
+    "roulette.test-stream": [],
     "bet.store": [],
     "wallet.update_balance": [],
     "register": [],

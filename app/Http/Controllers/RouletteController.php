@@ -39,13 +39,13 @@ class RouletteController extends Controller
             ->get();
     }
 
-    /** @var array<string, string> */
+    /** @var array<string, string | int> */
     public const array STREAM_HEADERS = [
-        'Content-Type' => 'text/event-stream',
-        'Cache-Control' => 'no-cache',
-        'Connection' => 'keep-alive',
-        'X-Accel-Buffering' => 'no',
-        'X-Accel-Expires' => 0,
+        "Content-Type" => "text/event-stream",
+        "Cache-Control" => "no-cache",
+        "Connection" => "keep-alive",
+        "X-Accel-Buffering" => "no",
+        "X-Accel-Expires" => 0,
     ];
 
     // Use Server-Sent Events to inform the FE that the last game has finished
@@ -63,12 +63,12 @@ class RouletteController extends Controller
         });
 
         $response->setCallback(function () {
-//            echo ": heartbeat\n\n";
-//
-//            if (ob_get_level() > 0) {
-//                ob_flush();
-//            }
-//            flush();
+            echo ": heartbeat\n\n";
+
+            if (ob_get_level() > 0) {
+                ob_flush();
+            }
+            flush();
 
             Redis::subscribe(
                 config('roulette.cache.previous_games'),
@@ -88,5 +88,29 @@ class RouletteController extends Controller
         });
 
         return $response;
+    }
+
+    public function testStream(): StreamedResponse
+    {
+        ini_set('default_socket_timeout', -1);
+        set_time_limit(0);
+
+        return response()->stream(function () {
+            while (true) {
+                if (connection_aborted()) {
+                    info("Connection aborted");
+
+                    return;
+                }
+
+                echo "data: Hello!\n\n";
+
+                ob_flush();
+                flush();
+
+                sleep(1);
+                info("Sleeping...");
+            }
+        }, headers: self::STREAM_HEADERS);
     }
 }
