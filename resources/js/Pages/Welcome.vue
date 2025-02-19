@@ -19,10 +19,12 @@ defineProps<{
       class="flex min-h-screen w-full max-w-2xl flex-col items-center justify-center px-6
         selection:bg-[#FF2D20] selection:text-white lg:max-w-7xl">
       <header class="grid w-full grid-cols-3 items-center py-6">
-        <ApplicationLogo class="size-16 fill-current text-gray-500" />
-        <Link href="https://github.com/Colonel-Sandvich/roulette">
-          <GitHubLogo class="size-16 ml-4" />
-        </Link>
+        <div>
+          <ApplicationLogo class="size-16 fill-current text-gray-500" />
+          <Link href="https://github.com/Colonel-Sandvich/roulette">
+            <GitHubLogo class="size-16 ml-4" />
+          </Link>
+        </div>
         <h1 class="col-start-2 text-center text-xl font-bold">Welcome to Matt's Casino</h1>
         <nav v-if="canLogin" class="flex justify-end gap-4 text-white">
           <Link
