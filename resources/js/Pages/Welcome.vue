@@ -19,7 +19,7 @@ defineProps<{
       class="flex min-h-screen w-full max-w-2xl flex-col items-center justify-center px-6
         selection:bg-[#FF2D20] selection:text-white lg:max-w-7xl">
       <header class="grid w-full grid-cols-3 items-center py-6">
-        <div>
+        <div class="flex">
           <ApplicationLogo class="size-16 fill-current text-gray-500" />
           <Link href="https://github.com/Colonel-Sandvich/roulette">
             <GitHubLogo class="size-16 ml-4" />
