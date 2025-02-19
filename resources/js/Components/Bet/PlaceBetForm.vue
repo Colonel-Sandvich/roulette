@@ -85,7 +85,7 @@ const betsClosedText = computed(() => {
             name="amount"
             placeholder="1"
             min="1"
-            max="10000"
+            max="1000"
             required />
         </div>
         <PrimaryButton type="submit" :disabled>Place Bet</PrimaryButton>
