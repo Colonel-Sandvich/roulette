@@ -98,6 +98,8 @@ const submit = () => {
           Register
         </PrimaryButton>
       </div>
+
+      <p class="pt-2">By the way the email is NOT verified as this is just a hobby project</p>
     </form>
   </GuestLayout>
 </template>

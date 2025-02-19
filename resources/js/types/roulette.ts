@@ -1,9 +1,3 @@
-export type OpenGame = {
-  id: number;
-  result: null;
-  created_at: Date;
-};
-
 export type ClosedGame = {
   id: number;
   result: number;

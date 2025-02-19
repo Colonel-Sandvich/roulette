@@ -2,6 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 import vue from "@vitejs/plugin-vue";
 import laravel from "laravel-vite-plugin";
 import { defineConfig } from "vite";
+import { plugin as markdownPlugin, Mode } from "vite-plugin-markdown";
 import vueDevTools from "vite-plugin-vue-devtools";
 
 export default defineConfig({
@@ -24,6 +25,9 @@ export default defineConfig({
       launchEditor: "codium",
     }),
     tailwindcss(),
+    markdownPlugin({
+      mode: [Mode.VUE],
+    }),
   ],
   envPrefix: ["VITE_", "ROULETTE_"],
 });

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { Head, Link } from "@inertiajs/vue3";
+import { VueComponent as ReadMeComponent } from "../../../README.md";
 
 defineProps<{
   canLogin?: boolean;
@@ -47,7 +48,9 @@ defineProps<{
         </nav>
       </header>
 
-      <main class="grow">Tech Stack: Laravel, Vue, Inertiajs, SQLite, Tailwindcss</main>
+      <main class="grow prose-xl py-10 prose-li:list-disc">
+        <ReadMeComponent />
+      </main>
 
       <footer class="py-16 text-center text-sm text-black">
         Laravel v{{ laravelVersion }} (PHP v{{ phpVersion }})
