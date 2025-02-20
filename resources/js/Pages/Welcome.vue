@@ -21,9 +21,9 @@ defineProps<{
       <header class="grid w-full grid-cols-3 items-center py-6">
         <div class="flex">
           <ApplicationLogo class="size-16 fill-current text-gray-500" />
-          <Link href="https://github.com/Colonel-Sandvich/roulette">
+          <a href="https://github.com/Colonel-Sandvich/roulette">
             <GitHubLogo class="size-16 ml-4" />
-          </Link>
+          </a>
         </div>
         <h1 class="col-start-2 text-center text-xl font-bold">Welcome to Matt's Casino</h1>
         <nav v-if="canLogin" class="flex justify-end gap-4 text-white">
