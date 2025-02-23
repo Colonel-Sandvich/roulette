@@ -19,7 +19,7 @@ An online casino seemed to fit the bill, as it required a long running schedule/
 - I wrote some SQL queries that I'm quite proud of. [This one](https://github.com/Colonel-Sandvich/roulette/blob/master/app/Jobs/ProcessBets.php#L46) took a while to get right but it updates all winning user's wallets with the correct amount in a single query. If restricted to eloquent, then this would likely require a separate query per winning user.
 
 - I attempted to colocate code by domain rather than by type. So all things `Bet` related go in one folder rather than having a monolithic `Services` folder that contains many unrelated domains.
-But honestly, this project is too small to really determine if this was a benefit or not.
+  But honestly, this project is too small to really determine if this was a benefit or not.
 
 ## Learning moments
 
@@ -32,7 +32,7 @@ But honestly, this project is too small to really determine if this was a benefi
 ## Limitations and Frustrations
 
 - I'm using Railway as a hosting provider (because it's free). Unfortunately, they have a hard cap of 5 seconds on all non-websocket connections and I only found this out very late into the project.
-In prod we just fallback to polling.
+  In prod we just fallback to polling.
 
 - Inertiajs completely reworks how api requests are done and needs a change of mental model.
 
@@ -70,3 +70,7 @@ In prod we just fallback to polling.
 - Larastan (PHPStan)
 - Prettier
 - Pint
+
+## Demo
+
+![Demo Video](/Screencast%20From%202025-02-23%2014-02-57.mp4)
