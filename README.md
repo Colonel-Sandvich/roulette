@@ -73,4 +73,6 @@ An online casino seemed to fit the bill, as it required a long running schedule/
 
 ## Demo
 
-![Demo Video](/Screencast%20From%202025-02-23%2014-02-57.mp4)
+https://github.com/user-attachments/assets/a40cb5fb-977d-4c88-bd10-cc7e9fd7f170
+
+
