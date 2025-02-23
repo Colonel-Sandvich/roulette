@@ -54,8 +54,9 @@ defineProps<{
         </nav>
       </header>
 
-      <main class="grow prose-xl py-10 prose-li:list-disc prose-a:text-blue-600
-              prose-a:underline hover:prose-a:text-blue-500 prose-h1:underline">
+      <main
+        class="grow prose-xl py-10 prose-li:list-disc prose-a:text-blue-600 prose-a:underline
+          hover:prose-a:text-blue-500 prose-h1:underline">
         <ReadMeComponent />
       </main>
 
