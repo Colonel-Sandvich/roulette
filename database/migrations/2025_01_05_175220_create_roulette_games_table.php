@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\RouletteController;
+use App\Roulette\GetCurrentRouletteGame;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -10,8 +12,8 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * @see \App\Http\Controllers\RouletteController
-     * @see \App\Roulette\GetCurrentRouletteGame
+     * @see RouletteController
+     * @see GetCurrentRouletteGame
      *
      * Unique index on `result IS NULL` would unfortunately NOT guarantee one open game
      * @link https://www.sqlite.org/lang_createindex.html

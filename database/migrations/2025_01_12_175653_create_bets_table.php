@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\RouletteController;
+use App\Jobs\ProcessBets;
 use App\Models\RouletteGame;
 use App\Models\Wallet;
 use Illuminate\Database\Migrations\Migration;
@@ -11,8 +13,8 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * @see \App\Jobs\ProcessBets
-     * @see \App\Http\Controllers\RouletteController
+     * @see ProcessBets
+     * @see RouletteController
      */
     public function up(): void
     {
