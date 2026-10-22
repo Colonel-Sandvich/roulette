@@ -6,5 +6,5 @@
     ],
     "htmlWhitespaceSensitivity": "ignore",
     "bracketSameLine": true,
-    "endingPosition": "absolute-with-indent"
+    "endingPosition": "absolute"
 }

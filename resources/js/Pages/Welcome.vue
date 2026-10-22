@@ -2,7 +2,7 @@
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import GitHubLogo from "@/Components/GitHubLogo.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { VueComponent as ReadMeComponent } from "../../../README.md";
+import { html as readMeHtml } from "../../../README.md";
 
 defineProps<{
   canLogin?: boolean;
@@ -57,7 +57,8 @@ defineProps<{
       <main
         class="grow prose-xl py-10 prose-li:list-disc prose-a:text-blue-600 prose-a:underline
           hover:prose-a:text-blue-500 prose-h2:underline">
-        <ReadMeComponent />
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div v-html="readMeHtml"></div>
       </main>
 
       <footer class="py-16 text-center text-sm text-black">

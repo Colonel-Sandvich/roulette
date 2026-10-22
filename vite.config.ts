@@ -1,9 +1,26 @@
 import tailwindcss from "@tailwindcss/vite";
 import vue from "@vitejs/plugin-vue";
 import laravel from "laravel-vite-plugin";
-import { defineConfig } from "vite";
-import { plugin as markdownPlugin, Mode } from "vite-plugin-markdown";
-import vueDevTools from "vite-plugin-vue-devtools";
+import MarkdownIt from "markdown-it";
+import { defineConfig, type Plugin } from "vite";
+
+const markdown = new MarkdownIt({ html: true, linkify: true });
+
+function markdownToHtml(): Plugin {
+  return {
+    name: "markdown-to-html",
+    transform(code, id) {
+      if (!id.endsWith(".md")) {
+        return null;
+      }
+
+      return {
+        code: `export const html = ${JSON.stringify(markdown.render(code))};`,
+        map: null,
+      };
+    },
+  };
+}
 
 export default defineConfig({
   plugins: [
@@ -20,14 +37,8 @@ export default defineConfig({
         },
       },
     }),
-    vueDevTools({
-      appendTo: "app.ts",
-      launchEditor: "codium",
-    }),
     tailwindcss(),
-    markdownPlugin({
-      mode: [Mode.VUE],
-    }),
+    markdownToHtml(),
   ],
   envPrefix: ["VITE_", "ROULETTE_"],
 });
