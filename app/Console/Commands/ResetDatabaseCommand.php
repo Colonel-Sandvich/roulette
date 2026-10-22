@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Database\Schema\Grammars\SQLiteGrammar;
 use Illuminate\Database\SQLiteConnection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class ResetDatabaseCommand extends Command
 {
@@ -17,21 +17,11 @@ class ResetDatabaseCommand extends Command
 
     public function handle(): void
     {
-        $connection = DB::connection();
-        $grammar = $connection->getSchemaGrammar();
-
-        if (! $connection instanceof SQLiteConnection) {
-            return;
-        }
-        if (! $grammar instanceof SQLiteGrammar) {
+        if (! DB::connection() instanceof SQLiteConnection) {
             return;
         }
 
-        // https://github.com/laravel/framework/discussions/53044#discussioncomment-10861735
-        $connection->statement($grammar->compileEnableWriteableSchema());
-        $connection->statement($grammar->compileDropAllTables());
-        $connection->statement($grammar->compileEnableWriteableSchema());
-        $connection->statement($grammar->compileRebuild());
+        Schema::dropAllTables();
 
         $this->call('migrate', ['--force' => true]);
     }
