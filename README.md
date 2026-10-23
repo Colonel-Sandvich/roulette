@@ -50,7 +50,7 @@ An online casino seemed to fit the bill, as it required a long running schedule/
 ## Deployment
 
 Railway builds the app with Railpack on PHP 8.5:
-- `railpack.json` starts `railpack-start.sh`, which creates the SQLite file on the Railway volume, runs migrations, starts the scheduler and queue worker, then hands over to FrankenPHP.
+- `start-container.sh` creates the SQLite file on the Railway volume, runs migrations and Laravel's optimisations, starts the scheduler and queue worker, then starts FrankenPHP.
 - Frontend assets are built with Bun.
 
 ## Future Improvements
