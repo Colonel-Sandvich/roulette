@@ -12,16 +12,17 @@ if [ -n "${RAILWAY_VOLUME_MOUNT_PATH:-}" ] && [ -d "$RAILWAY_VOLUME_MOUNT_PATH" 
     chmod -R 777 "$RAILWAY_VOLUME_MOUNT_PATH"
 fi
 
-# Clear build-time caches before using the runtime environment.
+# Clear build-time caches before the workers use the runtime environment.
+# Railpack's /start-container.sh runs storage:link, optimize:clear and
+# optimize again for the web server.
 php artisan optimize:clear
 php artisan migrate --force
-php artisan storage:link || true
-php artisan optimize
 
 chmod +x run-cron.sh run-worker.sh
 ./run-cron.sh &
 ./run-worker.sh &
 
-# Migrations and optimisation have already run above.
+# Migrations have already run above; Railpack handles optimisation and the
+# web server in /start-container.sh.
 export RAILPACK_SKIP_MIGRATIONS=true
 exec bash /start-container.sh
