@@ -47,7 +47,13 @@ An online casino seemed to fit the bill, as it required a long running schedule/
 
 - PHP's code execution flow is simple but lacks useful things provided by asynchronous programming. Normally, this wouldn't be an issue, but it creates problems for the [SSE endpoint](https://github.com/Colonel-Sandvich/roulette/blob/master/app/Http/Controllers/RouletteController.php#L70-L82). Since `Redis::subscribe` is blocking we actually have no idea the user has closed the connection until the next event comes in and we try to flush new data. So HTTP connections stick around for longer than needed. This isn't necessarily a problem with SSE but the tooling around websockets is so much better that it would have fixed this problem here at the cost of increasing the app's complexity.
 
-## Future Improvments
+## Deployment
+
+Railway builds the app with Railpack on PHP 8.5:
+- `railpack.json` starts `railpack-start.sh`, which creates the SQLite file on the Railway volume, runs migrations, starts the scheduler and queue worker, then hands over to FrankenPHP.
+- Frontend assets are built with Bun.
+
+## Future Improvements
 
 - Add more tests.
 - Add CI/CD to run the various `composer/bun format/lint` scripts and the test suite.
