@@ -4,6 +4,12 @@
 # Exit the script if any command fails
 set -e
 
+# Railpack provides its own start script and assets. When Railway still has a
+# custom start command pointing at this file, hand off to the Railpack wrapper.
+if [ -f /start-container.sh ]; then
+    exec bash /app/railpack-start.sh
+fi
+
 ls -lah "$RAILWAY_VOLUME_MOUNT_PATH"
 
 if [ ! -f "$DB_DATABASE" ]; then
